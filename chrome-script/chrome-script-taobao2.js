@@ -1,3 +1,14 @@
+// ==UserScript==
+// @name         doubleEleven-bigScreen
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  shows how to use babel compiler
+// @author       rossroma
+// @require      https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.2/babel.js
+// @include      https://sycm.taobao.com/datawar/room/daily
+// @require      https://code.jquery.com/jquery-2.1.4.min.js
+// @run-at       document-end
+// @match        <$URL
 
 // 监听价格变动
 var handleSaleChange = (function () {
@@ -23,7 +34,7 @@ var handleSaleChange = (function () {
     },
     emitData(params) {
       const img = new Image()
-      img.src = `http://192.168.31.184/pageData/taobao2?storeData=${params}`
+      img.src = `http://192.168.40.135/pageData/taobao2?storeData=${params}`
     }
   }
 })()
