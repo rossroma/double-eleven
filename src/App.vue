@@ -1,17 +1,53 @@
 <template>
   <div id="app">
-    <h1 class="title">决战双十一</h1>
-    <h2>销量总计：{{saleTotal | kFormat}} ;  访客总计：{{uvTotal}}</h2>
-    <transition-group name="list-complete" tag="ul" class="list">
-      <li
-        class="item"
-        v-for="(item, index) in salesList"
-        :key="index">
-        <span class="name">{{item.store}}</span>
-        <span class="value">销售金额：{{item.sale | kFormat}}</span>
-        <span class="value">访客数：{{item.uv}}</span>
-      </li>
-    </transition-group>
+    <header class="head">
+      <h1 class="title">决战双十一</h1>
+      <h2>销量总计：{{saleTotal | kFormat}} ;  访客总计：{{uvTotal}}</h2>
+    </header>
+
+    <section class="content">
+      <div class="part-item">
+        <h2 class="sub-title">天猫数据</h2>
+        <transition-group name="list-complete" tag="ul" class="list">
+          <li class="item" key="first">
+            <span class="avatar"></span>
+            <span class="name">店铺名</span>
+            <span class="pay">销售额</span>
+            <span class="uv">访客数</span>
+          </li>
+          <li
+            class="item"
+            v-for="(item, index) in tbList"
+            :key="index">
+            <span class="avatar">
+              <img :src="item.pictureUrl" alt="">
+            </span>
+            <span class="name">{{item.title}}</span>
+            <span class="pay">{{item.payAmt}}</span>
+            <span class="uv">{{item.uv}}</span>
+          </li>
+        </transition-group>
+      </div>
+
+      <div class="part-item">
+        <h2 class="sub-title">京东</h2>
+        <transition-group name="list-complete" tag="ul" class="list">
+          <li class="item" key="first">
+            <span class="name">店铺名</span>
+            <span class="pay">销售额</span>
+            <span class="uv">访客数</span>
+          </li>
+          <li
+            class="item"
+            v-for="(item, index) in jdList"
+            :key="index">
+            <span class="name">{{item.title}}</span>
+            <span class="pay">{{item.payAmt}}</span>
+            <span class="uv">{{item.uv}}</span>
+          </li>
+        </transition-group>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -23,8 +59,10 @@ export default {
 
   data () {
     return {
-      // 销售数据
-      salesList: [],
+      // 京东数据
+      jdList: [],
+      // 淘宝数据
+      tbList: [],
       interval: null
     }
   },
@@ -34,18 +72,22 @@ export default {
     clearInterval(this.interval)
     this.interval = setInterval(() => {
       this.getSalesList()
-    }, 2000)
+    }, 5000)
   },
 
   computed: {
     // 销售额汇总
     saleTotal () {
-      return this.salesList.reduce((acc, item) => acc + item.sale, 0)
+      let tb = this.tbList.reduce((acc, item) => acc + item.payAmt, 0)
+      let jd = this.jdList.reduce((acc, item) => acc + item.payAmt, 0)
+      return tb + jd
     },
 
     // 访客数汇总
     uvTotal () {
-      return this.salesList.reduce((acc, item) => acc + item.uv, 0)
+      let tb = this.tbList.reduce((acc, item) => acc + item.uv, 0)
+      let jd = this.jdList.reduce((acc, item) => acc + item.uv, 0)
+      return tb + jd
     }
   },
 
@@ -62,9 +104,9 @@ export default {
     // 获取销售数据
     getSalesList () {
       Bus.get('getSalesList', (data) => {
-        console.log('获取返回数据', data.result)
-        data.result.sort((a, b) => b.sale - a.sale)
-        this.salesList = data.result
+        console.log('获取返回数据', data.jingdong, data.taobao)
+        this.jdList = data.jingdong
+        this.tbList = data.taobao
       })
     }
   }
@@ -72,17 +114,59 @@ export default {
 </script>
 
 <style lang="less" scoped>
+* {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  list-style: none;
+}
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  .head {
+    text-align: center;
+  }
+  .content {
+    width: 1000px;
+    position: relative;
+    display: flex;
+    margin: 40px auto 0;
+    .part-item {
+      flex: 1 1 auto;
+    }
+  }
   .list {
     position: relative;
     .item {
       transition: all 1s;
+      line-height: 40px;
+      padding-bottom: 20px;
+      span {
+        display: inline-block;
+        vertical-align: top;
+      }
+      .avatar {
+        width: 40px;
+        height: 40px;
+        margin-right: 20px;
+        img {
+          vertical-align: top;
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .name {
+        width: 200px;
+      }
+      .pay {
+        width: 120px;
+      }
+      .uv {
+        width: 100px;
+      }
     }
     .list-complete-enter, .list-complete-leave-to {
       opacity: 0;

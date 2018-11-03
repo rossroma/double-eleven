@@ -16,30 +16,29 @@ function shouldCompress (req, res) {
   return compression.filter(req, res)
 }
 
-// 实时销售数据
-const salesData = [
-  {
-    store: 'midea美的泽蓝专卖店',
-    sale: 0
-  }
-]
+// 京东店铺数据
+let jdData = []
+
+// 淘宝店铺数据
+let tbData = []
 
 // 存储数据
-function saveSales (storeName, sale, uv) {
+function saveSales (title, payAmt, uv) {
   // 格式化销售数据
-  sale = Number(sale.replace(/,/g, ''))
+  payAmt = Number(payAmt.replace(/,/g, ''))
 
-  console.log(storeName, uv)
+  console.log(title, uv)
   // 格式化UV
   uv = Number(uv.replace(/,/g, ''))
-  const index = salesData.findIndex(item => item.store === storeName)
+  const index = jdData.findIndex(item => item.title === title)
+  console.log(index, title)
   if (index > -1) {
-    salesData[index].sale = sale
-    salesData[index].uv = uv
+    jdData[index].payAmt = payAmt
+    jdData[index].uv = uv
   } else {
-    salesData.push({
-      store: storeName,
-      sale,
+    jdData.push({
+      title,
+      payAmt,
       uv
     })
   }
@@ -59,7 +58,19 @@ app.get('/pageData/taobao', function (req, res, next) {
   const query = req.query // 所有参数
   console.log('获取淘宝参数', query)
   // 存储数据
-  saveSales(query.store, query.sale || '0', query.uv || '0')
+  // saveSales(query.store, query.sale || '0', query.uv || '0')
+  res.end()
+})
+
+// 获取淘宝多店铺数据
+app.get('/pageData/taobao2', function (req, res, next) {
+  // 拼接url
+  const query = req.query // 所有参数
+  const params = decodeURIComponent(query.storeData)
+
+  // console.log('获取淘宝多店铺参数', JSON.parse(params))
+  // 存储数据
+  tbData = JSON.parse(params)
   res.end()
 })
 
@@ -78,7 +89,8 @@ app.get('/getSalesList', function (req, res, next) {
   let result = {
     code: 1,
     msg: '查询成功',
-    result: salesData
+    jingdong: jdData,
+    taobao: tbData
   }
   res.end(JSON.stringify(result))
 })
