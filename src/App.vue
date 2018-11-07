@@ -1,61 +1,91 @@
 <template>
-  <div id="app">
+  <div id="app" class="app">
     <header class="head">
-      <h1 class="title">决战双十一</h1>
-      <h2>销量总计：{{saleTotal | kFormat}} ;  访客总计：{{uvTotal}}</h2>
+      <div class="title">达尔美 2018.11.11</div>
+      <div class="text">全店铺累计支付金额</div>
+      <div class="money">{{saleTotal | kFormat}}</div>
     </header>
+
+    <!-- <div class="content">
+      <div class="part-item">
+        <ul class="list">
+          <li class="item">
+            <span class="name">店铺名拉拉飞机</span>
+            <span class="pay">129983758.00元</span>
+          </li>
+          <li class="item">
+            <span class="name">店铺名拉拉飞机</span>
+            <span class="pay">129983758.00元</span>
+          </li>
+          <li class="item">
+            <span class="name">店铺名拉拉飞机</span>
+            <span class="pay">129983758.00元</span>
+          </li>
+        </ul>
+      </div>
+      <div class="part-item">
+        <ul class="list">
+          <li class="item">
+            <span class="name">店铺名拉拉飞机</span>
+            <span class="pay">129983758.00元</span>
+          </li>
+          <li class="item">
+            <span class="name">店铺名拉拉飞机</span>
+            <span class="pay">129983758.00元</span>
+          </li>
+          <li class="item">
+            <span class="name">店铺名拉拉飞机</span>
+            <span class="pay">129983758.00元</span>
+          </li>
+        </ul>
+      </div>
+    </div> -->
 
     <section class="content">
       <div class="part-item">
-        <h2 class="sub-title">天猫数据</h2>
         <transition-group name="list-complete" tag="ul" class="list">
-          <li class="item" key="first">
-            <span class="avatar"></span>
-            <span class="name">店铺名</span>
-            <span class="pay">销售额</span>
-            <span class="uv">访客数</span>
-          </li>
           <li
             class="item"
             v-for="(item, index) in tbList"
             :key="index">
-            <span class="avatar">
-              <img :src="item.pictureUrl" alt="">
-            </span>
             <span class="name">{{item.title}}</span>
             <span class="pay">{{item.payAmt}}</span>
-            <span class="uv">{{item.uv}}</span>
           </li>
         </transition-group>
       </div>
 
       <div class="part-item">
-        <h2 class="sub-title">京东</h2>
         <transition-group name="list-complete" tag="ul" class="list">
-          <li class="item" key="first">
-            <span class="name">店铺名</span>
-            <span class="pay">销售额</span>
-            <span class="uv">访客数</span>
-          </li>
           <li
             class="item"
             v-for="(item, index) in jdList"
             :key="index">
             <span class="name">{{item.title}}</span>
             <span class="pay">{{item.payAmt}}</span>
-            <span class="uv">{{item.uv}}</span>
           </li>
         </transition-group>
       </div>
     </section>
+
+    <div class="footer">
+      {{currentTime}}
+    </div>
+
+    <count-down v-if="isCountDownShow" @close="isCountDownShow = false"></count-down>
   </div>
 </template>
 
 <script>
 import Bus from './bus'
+import CountDown from './components/count-down'
+let t = null
 
 export default {
   name: 'App',
+
+  components: {
+    CountDown
+  },
 
   data () {
     return {
@@ -63,7 +93,11 @@ export default {
       jdList: [],
       // 淘宝数据
       tbList: [],
-      interval: null
+      interval: null,
+      // 倒计时是否显示
+      isCountDownShow: false,
+      // 当前时间
+      currentTime: '2018-11-08  00:17:41'
     }
   },
 
@@ -73,6 +107,8 @@ export default {
     this.interval = setInterval(() => {
       this.getSalesList()
     }, 5000)
+
+    this.getTimeNow()
   },
 
   computed: {
@@ -95,8 +131,8 @@ export default {
     // 数字增加千分位
     kFormat (num) {
       const numStr = num.toString()
-      const re = /(?=(?!(\b))(\d{3})+$)/g
-      return numStr.replace(re, ',')
+      const re = /(\d{1,3})(?=(\d{3})+(?:$|\.))/g
+      return numStr.replace(re, '$1,')
     }
   },
 
@@ -108,73 +144,128 @@ export default {
         this.jdList = data.jingdong
         this.tbList = data.taobao
       })
+    },
+
+    // 将时间格式化
+    timeFormat (num) {
+      return ('0' + num).substr(-2)
+    },
+
+    // 获取当前时间，并显示在页面
+    getTimeNow () {
+      clearTimeout(t)
+      const date = (new Date()).getTime()
+      const localDate = new Date(date + 28800000)
+      const dateStr = localDate.toISOString().substr(0, 19)
+      this.currentTime = dateStr.replace('T', '  ')
+      t = setTimeout(this.getTimeNow, 1000)
     }
   }
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 * {
   padding: 0;
   margin: 0;
   border: 0;
   list-style: none;
 }
-#app {
+html {
+  font-size: 16px;
+}
+@media screen and (min-width: 1200px){
+  html {
+    font-size: 20px;
+  }
+}
+@media screen and (min-width:1600px){
+  html {
+    font-size: 30px;
+  }
+}
+</style>
+
+<style lang="less" scoped>
+.app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  margin-top: 60px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: url('./assets/images/WechatIMG48.png') no-repeat center center;
+  background-size: 100% 100%;
+  color: #ffffff;
   .head {
     text-align: center;
+    .title {
+      margin-top: 8.5rem;
+    }
+    .text {
+      font-size: 0.7rem;
+      margin-top: 0.4rem;
+    }
+    .money {
+      font-family: 'LcdD', 'Cochin';
+      font-size: 6.6rem;
+      line-height: 1;
+      color: rgb(249, 217, 148);
+    }
   }
   .content {
-    width: 1000px;
+    width: 45.1rem;
     position: relative;
-    display: flex;
-    margin: 40px auto 0;
+    margin: 1.4rem auto 0;
+    font-size: 0;
     .part-item {
-      flex: 1 1 auto;
+      width: 50%;
+      display: inline-block;
     }
-  }
-  .list {
-    position: relative;
-    .item {
-      transition: all 1s;
-      line-height: 40px;
-      padding-bottom: 20px;
-      span {
-        display: inline-block;
-        vertical-align: top;
-      }
-      .avatar {
-        width: 40px;
-        height: 40px;
-        margin-right: 20px;
-        img {
+    .list {
+      position: relative;
+      .item {
+        transition: all 1s;
+        line-height: 2rem;
+        height: 2.2rem;
+        padding: 0 3.3rem;
+        overflow: hidden;
+        text-align: right;
+        span {
+          display: inline-block;
           vertical-align: top;
-          width: 100%;
-          height: 100%;
+        }
+        .name {
+          font-size: 0.7rem;
+          opacity: 0.9;
+          float: left;
+          line-height: 2.2rem;
+        }
+        .pay {
+          font-size: 1rem;
+          font-family: 'LcdD', 'Cochin';
+          color: rgb(249, 217, 148);
         }
       }
-      .name {
-        width: 200px;
+      .list-complete-enter, .list-complete-leave-to {
+        opacity: 0;
+        transform: translateY(1rem);
       }
-      .pay {
-        width: 120px;
-      }
-      .uv {
-        width: 100px;
+      .list-complete-leave-active {
+        position: absolute;
       }
     }
-    .list-complete-enter, .list-complete-leave-to {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    .list-complete-leave-active {
-      position: absolute;
-    }
+  }
+  .footer {
+    text-align: center;
+    line-height: 1;
+    font-size: 0.9rem;
+    font-family: 'LcdD', 'Cochin';
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 1.2rem;
+    opacity: 0.8;
   }
 }
 </style>
