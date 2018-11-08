@@ -27,11 +27,12 @@ function saveSales (title, payAmt, uv) {
   // 格式化销售数据
   payAmt = Number(payAmt.replace(/,/g, ''))
 
-  console.log(title, uv)
+  // console.log(title, payAmt)
   // 格式化UV
   uv = Number(uv.replace(/,/g, ''))
+
+  // 选中历史数据中是否存在，否则新增
   const index = jdData.findIndex(item => item.title === title)
-  console.log(index, title)
   if (index > -1) {
     jdData[index].payAmt = payAmt
     jdData[index].uv = uv
@@ -68,7 +69,7 @@ app.get('/pageData/taobao2', function (req, res, next) {
   const query = req.query // 所有参数
   const params = decodeURIComponent(query.storeData)
 
-  // console.log('获取淘宝多店铺参数', JSON.parse(params))
+  console.log('获取淘宝多店铺参数', JSON.parse(params))
   // 存储数据
   tbData = JSON.parse(params)
   res.end()

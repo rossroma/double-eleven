@@ -176,7 +176,7 @@ html {
 }
 @media screen and (min-width: 1200px){
   html {
-    font-size: 20px;
+    font-size: 22px;
   }
 }
 @media screen and (min-width:1600px){

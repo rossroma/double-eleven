@@ -26,7 +26,7 @@ var handleSaleChange = (function () {
           handleSaleChange.emitData(newSale, uv)
           changeNum = newSale + uv
         }
-        setTimeout(handleSaleChange.init, 2000)
+        setTimeout(handleSaleChange.init, 10000)
       })
     },
     emitData(newSale, uv) {

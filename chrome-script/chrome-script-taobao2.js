@@ -30,7 +30,7 @@ var handleSaleChange = (function () {
         })
       })
 
-      setTimeout(handleSaleChange.init, 20000);
+      setTimeout(handleSaleChange.init, 10000);
     },
     emitData(params) {
       const img = new Image()
