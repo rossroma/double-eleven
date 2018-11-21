@@ -2,7 +2,7 @@
  * @Author: kai.yang
  * @Date: 2018-11-05 13:49:46
  * @LastEditors: kai.yang
- * @LastEditTime: 2018-11-08 00:16:44
+ * @LastEditTime: 2018-11-12 14:30:19
  * @Description: 倒计时组件
  */
 <template>
@@ -66,8 +66,8 @@ export default {
       this.miniutes.splice(0, 1, miniutes)
       this.seconds.splice(0, 1, seconds)
 
-      // 当数值全为0时，清除倒计时，并关闭窗口
-      if (hours === miniutes && miniutes === seconds) {
+      // 倒计时结束时，并关闭窗口
+      if ((this.endTime - date) <= 0) {
         console.log('倒计时结束')
         clearInterval(t)
         this.$emit('close')

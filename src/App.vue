@@ -49,7 +49,7 @@
             v-for="(item, index) in tbList"
             :key="index">
             <span class="name">{{item.title}}</span>
-            <span class="pay">{{item.payAmt}}</span>
+            <span class="pay">{{item.payAmt | kFormat}}</span>
           </li>
         </transition-group>
       </div>
@@ -61,7 +61,7 @@
             v-for="(item, index) in jdList"
             :key="index">
             <span class="name">{{item.title}}</span>
-            <span class="pay">{{item.payAmt}}</span>
+            <span class="pay">{{item.payAmt | kFormat}}</span>
           </li>
         </transition-group>
       </div>
@@ -95,7 +95,7 @@ export default {
       tbList: [],
       interval: null,
       // 倒计时是否显示
-      isCountDownShow: false,
+      isCountDownShow: true,
       // 当前时间
       currentTime: '2018-11-08  00:17:41'
     }
@@ -130,7 +130,7 @@ export default {
   filters: {
     // 数字增加千分位
     kFormat (num) {
-      const numStr = num.toString()
+      const numStr = num.toFixed(2)
       const re = /(\d{1,3})(?=(\d{3})+(?:$|\.))/g
       return numStr.replace(re, '$1,')
     }

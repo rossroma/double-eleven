@@ -42,3 +42,8 @@ setTimeout(() => {
     // 开始执行方法
     handleSaleChange.init()
   }, 7000)
+
+setTimeout(() => {
+  // 每小时刷新一次页面，防止token过期
+  window.location.reload()
+}, 3600)
