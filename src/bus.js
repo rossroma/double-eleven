@@ -3,7 +3,7 @@ import Resource from 'vue-resource'
 Vue.use(Resource)
 
 // 默认请求路径
-const path = process.env.NODE_ENV === 'production' ? '/' : 'http://127.0.0.1/'
+const path = process.env.NODE_ENV === 'production' ? '/' : 'http://192.168.40.192/'
 
 // get请求
 const get = function (url, cb) {

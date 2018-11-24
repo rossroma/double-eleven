@@ -30,7 +30,7 @@ var handleSaleChange = (function () {
       console.log('价格变更:', `当前销售额：${newSale}`, `访客数：${uv}`)
       const storeName = $('.ebase-Selector__title').text().trim()
       const img = new Image()
-      img.src = `http://192.168.40.135/pageData/taobao?store=${storeName}&sale=${newSale}&uv=${uv}`
+      img.src = `http://192.168.40.192/pageData/taobao?store=${storeName}&sale=${newSale}&uv=${uv}`
     }
   }
 })()

@@ -8,7 +8,8 @@
 // @include      https://sycm.taobao.com/datawar/room/daily
 // @require      https://code.jquery.com/jquery-2.1.4.min.js
 // @run-at       document-end
-// @match        <$URL
+// @match        <$URL$>
+// ==/UserScript==
 
 // 监听价格变动
 var handleSaleChange = (function () {
@@ -34,7 +35,7 @@ var handleSaleChange = (function () {
     },
     emitData(params) {
       const img = new Image()
-      img.src = `http://192.168.40.135/pageData/taobao2?storeData=${params}`
+      img.src = `http://192.168.40.192/pageData/taobao2?storeData=${params}`
     }
   }
 })()
@@ -46,4 +47,4 @@ setTimeout(() => {
 setTimeout(() => {
   // 每小时刷新一次页面，防止token过期
   window.location.reload()
-}, 3600)
+}, 3600000)

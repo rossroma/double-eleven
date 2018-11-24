@@ -33,7 +33,7 @@ var handleSaleChange = (function () {
       console.log('价格变更:', `当前销售额：${newSale}`, `访客数：${uv}`)
       const storeName = $('.shop-name a').text().trim()
       const img = new Image()
-      img.src = `http://192.168.40.135/pageData/jingdong?store=${storeName}&sale=${newSale}&uv=${uv}`
+      img.src = `http://192.168.40.192/pageData/jingdong?store=${storeName}&sale=${newSale}&uv=${uv}`
     }
   }
 })()
@@ -45,4 +45,4 @@ setTimeout(() => {
 setTimeout(() => {
   // 每小时刷新一次页面，防止token过期
   window.location.reload()
-}, 3600)
+}, 3600000)
